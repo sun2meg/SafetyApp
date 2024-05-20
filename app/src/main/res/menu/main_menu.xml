@@ -1,0 +1,56 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+    android:id="@+id/action_enable_intervals"
+    android:title="Realtime Updates"
+    android:checkable="true"
+    android:checked="false"
+    app:showAsAction="never">
+    <menu>
+        <group android:id="@+id/intervals_group" android:checkableBehavior="single" /> <!-- Define intervals_group here -->
+        <item
+            android:id="@+id/action_time"
+            android:title="Update Interval">
+            <menu>
+                <group android:id="@+id/interval_group"
+                    android:visible="false"
+                    android:checkableBehavior="single"> <!-- Initially not visible -->
+                    <item
+                        android:id="@+id/interval_30sec"
+                        android:title="30 sec"
+                        />
+                    <item
+                        android:id="@+id/interval_2min"
+                        android:title="2 Minutes"
+                          />
+                    <item
+                        android:id="@+id/interval_5min"
+                        android:title="5 Minutes"
+                          />
+                    <item
+                        android:id="@+id/interval_10min"
+                        android:title="10 Minutes"
+                          />
+                </group>
+            </menu>
+        </item>
+    </menu>
+</item>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="Sending Interval"
+                app:showAsAction="never" />
+
+    <item
+        android:title="Update Information"
+        android:id="@+id/changeNum"/>
+    <item
+        android:id="@+id/exitapp"
+        android:orderInCategory="100"
+        android:title="Exit App"
+        app:showAsAction="never" />
+
+</menu>

@@ -1,0 +1,20 @@
+
+Q	java:S125"<This block of commented-out lines of code should be removed.(”›¢Ï
+Q	java:S125*"<This block of commented-out lines of code should be removed.(ÿÚÉÓ
+Q	java:S1257"<This block of commented-out lines of code should be removed.(¾™ÊŠ
+V	java:S125:"<This block of commented-out lines of code should be removed.(±ñÅ§øÿÿÿÿ
+[
+java:S1854T"@Remove this useless assignment to local variable "numberString".(ÑË×üÿÿÿÿ
+Q	java:S125R"<This block of commented-out lines of code should be removed.(Ø©Ì¶
+L
+java:S1481T"1Remove this unused "numberString" local variable.(ÑË×üÿÿÿÿ
+V	java:S125Y"<This block of commented-out lines of code should be removed.(ÃŒÜ’ûÿÿÿÿ
+Q
+java:S1117_";Rename "message" which hides the field declared at line 26.(Ô¸‡Ò
+V	java:S125s"<This block of commented-out lines of code should be removed.(–ç¯üÿÿÿÿ
+X
+java:S6353"<Use concise character class syntax '\\d' instead of '[0-9]'.(Ñ§Íùÿÿÿÿ
+K
+java:S1068 "0Remove this unused "countryArray" private field.( ¼šßøÿÿÿÿ
+L
+java:S1068""1Remove this unused "phoneEditText" private field.(®òèûÿÿÿÿ

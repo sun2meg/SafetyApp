@@ -1,0 +1,20 @@
+
+k	java:S117W"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(åñªşÿÿÿÿ
+k	java:S117X"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŠêÖøÿÿÿÿ
+f	java:S117Y"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÂŠˆ™
+C
+java:S1604?"(Make this anonymous inner class a lambda(ù¿Øåÿÿÿÿÿ
+Q	java:S125"<This block of commented-out lines of code should be removed.(˜ı¸»
+G
+java:S1874+"2Remove this use of "getDefault"; it is deprecated.(ÑÖßC
+m
+java:S32524"WUse static access with "androidx.core.content.ContextCompat" for "checkSelfPermission".(¥êêí
+m
+java:S32524"WUse static access with "androidx.core.content.ContextCompat" for "checkSelfPermission".(¥êêí
+M
+java:S11355"2Complete the task associated to this TODO comment.(áÃæùÿÿÿÿ
+V	java:S125]"<This block of commented-out lines of code should be removed.(Æ ®ıÿÿÿÿ
+V	java:S125e"<This block of commented-out lines of code should be removed.(ºˆÙÌûÿÿÿÿ
+V	java:S125i"<This block of commented-out lines of code should be removed.(Æ ®ıÿÿÿÿ
+D
+java:S1185™"(Remove this method to simply inherit it.(İßéàúÿÿÿÿ

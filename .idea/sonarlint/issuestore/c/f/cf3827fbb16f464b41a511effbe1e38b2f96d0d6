@@ -1,0 +1,49 @@
+
+e
+java:S1192~"JDefine a constant instead of duplicating this literal "APP_PREFS" 4 times.(î¾¢€ùÿÿÿÿ
+F
+java:S1066¦"/Merge this if statement with the enclosing one.(©§¹
+>
+java:S1604±"(Make this anonymous inner class a lambda(‘¹ÑI
+?
+java:S1604Í"(Make this anonymous inner class a lambda(íøı
+D
+java:S1604Û"(Make this anonymous inner class a lambda(üÛèúÿÿÿÿ
+D
+java:S1604à"(Make this anonymous inner class a lambda(Ş½Ìúÿÿÿÿ
+i	java:S116O"ORename this field "ENUM" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(½ï¿ÿÿÿÿÿ
+h	java:S116P"NRename this field "MSG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(í…À¿şÿÿÿÿ
+s
+java:S1450S"]Remove the "countDownTimer" field and declare it as a local variable in the relevant methods.(¯ÛÍğ
+Q	java:S1250"<This block of commented-out lines of code should be removed.(û’”Ú
+Q	java:S1252"<This block of commented-out lines of code should be removed.(Å’ı¸
+Q	java:S125;"<This block of commented-out lines of code should be removed.(•˜şÆ
+V	java:S125H"<This block of commented-out lines of code should be removed.(­•„Ùúÿÿÿÿ
+G
+java:S1874M"2Remove this use of "getDefault"; it is deprecated.(ÑÖßC
+V	java:S125a"<This block of commented-out lines of code should be removed.(óèöıÿÿÿÿ
+V	java:S125{"<This block of commented-out lines of code should be removed.(óèöıÿÿÿÿ
+R	java:S125†"<This block of commented-out lines of code should be removed.(î’ƒ 
+n
+java:S3776‹"RRefactor this method to reduce its Cognitive Complexity from 32 to the 15 allowed.(¨Œşÿÿÿÿ
+S
+java:S1117§"<Rename "location" which hides the field declared at line 78.(¡£À½
+W	java:S125º"<This block of commented-out lines of code should be removed.(•éŞêÿÿÿÿÿ
+Q	java:S125À"<This block of commented-out lines of code should be removed.(¨œ8
+Q	java:S125Æ"<This block of commented-out lines of code should be removed.(îÚ“v
+=	java:S131Ñ""Add a default case to this switch.(ÿ«¬‹üÿÿÿÿ
+R	java:S125‚"<This block of commented-out lines of code should be removed.(À°²å
+R	java:S125Š"<This block of commented-out lines of code should be removed.(é£ã‹
+z
+java:S3252°"WUse static access with "androidx.core.content.ContextCompat" for "checkSelfPermission".(îÄ¤¸üÿÿÿÿ8µç¶ªµ1
+W	java:S125À"<This block of commented-out lines of code should be removed.(¿ØÓĞÿÿÿÿÿ
+d	java:S100Ù"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(µÄ’ü
+Q	java:S125Õ"<This block of commented-out lines of code should be removed.(˜…°p
+Y	java:S125õ"<This block of commented-out lines of code should be removed.(¤âÖÉ8ıÜÉâ¤1
+W	java:S125Š"<This block of commented-out lines of code should be removed.(³œˆÙÿÿÿÿÿ
+L
+java:S1068/"6Remove this unused "isIterationEnabled" private field.(½”×„
+O
+java:S1144ú"8Remove this unused private "startSendingUpdates" method.(±Çö…
+Q
+java:S1144­":Remove this unused private "startLocationUpdates2" method.(¾¢ƒÈ
