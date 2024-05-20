@@ -70,10 +70,6 @@ public class RecordingService extends AppCompatActivity implements LocationListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        this.txtContinueLocation = (TextView) findViewById(R.id.txtContinueLocation);
-        this.btnContinueLocation = (Button) findViewById(R.id.btnContinueLocation);
-        this.txtLocation = (TextView) findViewById(R.id.txtLocation);
-        this.btnLocation = (Button) findViewById(R.id.btnLocation);
 
 
         msg = findViewById(R.id.editMsg);
@@ -156,24 +152,6 @@ public class RecordingService extends AppCompatActivity implements LocationListe
             }
         });
 
-        btnLocation.setOnClickListener(v -> {
-
-            if (!isGPS) {
-                Toast.makeText(this, "Please turn on GPS", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            isContinue = false;
-            getLocation();
-        });
-
-        btnContinueLocation.setOnClickListener(v -> {
-            if (!isGPS) {
-                Toast.makeText(this, "Please turn on GPS", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            isContinue = true;
-            getLocation();
-        });
     }
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(RecordingService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED

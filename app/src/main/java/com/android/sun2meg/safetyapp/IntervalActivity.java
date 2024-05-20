@@ -76,38 +76,6 @@ private static final String PREF_INTERVAL_KEY = "interval_key";
     private Runnable runnable = null;
     private long intervalMillis;
 
-//////////////////////////////////////////////////
-    Runnable runnable0 = new Runnable() {
-        @Override
-        public void run() {
-            startCountdown();
-            ToneGenerator tone = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-            tone.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-            // Schedule the next update after the specified interval
-//            if (isSendingUpdates) {
-//                handler.postDelayed(this,  (long) frequency * 1000 * 60);
-//            }
-
-            handler.postDelayed(this, frequency * 1000 * 60);
-//            handler.postDelayed(this, frequency * 1000 * 60);//freq
-        }
-    };
-    // Inside the updateRunnable definition
-
-    private Runnable updateRunnable = new Runnable() {
-        @Override
-        public void run() {
-            // Display a Toast message
-//            Toast.makeText(LocationUpdateActivity.this, "Location update sent!", Toast.LENGTH_SHORT).show();
-            startCountdown();
-            ToneGenerator tone = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-            tone.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-            // Schedule the next update after the specified interval
-            if (isSendingUpdates) {
-                handler.postDelayed(this,  (long) frequency * 1000 * 60);
-            }
-        }
-    };
 
     //    LocationTrack locationTrack;
     LocationManager nManager;
@@ -238,10 +206,9 @@ private static final String PREF_INTERVAL_KEY = "interval_key";
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    // Handle the updated location here
-                   longitude= location.getLongitude();
+                    longitude= location.getLongitude();
                     latitude=location.getLatitude();
-              }
+                }
             }
         };
 ///////////////////////////////////////
@@ -542,14 +509,12 @@ void showMessage(String msg){
         stopService(intent);
     }
     private void startSOSService(long interval) {
-        if (isSchedulingEnabled) {
-            Intent intent = new Intent(this, SOSService.class);
-            intent.putExtra("intervalMillis", interval);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(intent);
-            } else {
-                startService(intent);
-            }
+        Intent intent = new Intent(this, SOSService.class);
+        intent.putExtra("intervalMillis", interval);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
         }
     }
 
