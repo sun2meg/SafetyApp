@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_margin="5dp"
+
             android:background="@drawable/backbutton"
             android:text="Your Location \n will be sent to\n"
             android:textAlignment="center"
