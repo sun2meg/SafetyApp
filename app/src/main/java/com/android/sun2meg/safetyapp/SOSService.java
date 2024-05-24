@@ -14,9 +14,11 @@ import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
@@ -228,16 +230,69 @@ import com.google.android.gms.location.LocationServices;
 
 public class SOSService extends Service {
 
+
+    //    LocationTrack locationTrack;
+    LocationManager nManager;
+    String myLocation;
+    //    double latitude;
+//    double longitude;
+    SmsManager manager = SmsManager.getDefault();
+    String ENUM;
+    String MSG;
+
+    SharedPreferences sharedPreferences;
+
+    private static final long COUNTDOWN_TIME = 2000; // 2 seconds
+    private static final long INTERVAL = 100;
+    CountDownTimer countDownTimer;
+    private double latitude;
+    private double longitude;
     private Handler handler = new Handler(Looper.getMainLooper());
     private Runnable runnable;
     private long intervalMillis = 1000; // Default interval
     private boolean isRunning = false;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
+    private int locationChangeCounter;
+    private boolean gosend = false;
 
+    private PowerManager.WakeLock wakeLock;
+    LocationRequest locationRequest;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate() {
         super.onCreate();
         startForeground(1, createNotification());
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SOSService::WakeLockTag");
+        wakeLock.acquire();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        nManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        ENUM = sharedPreferences.getString("ENUM", "NONE");
+        MSG = sharedPreferences.getString("MSG", "NONE");
+
+//        LocationRequest locationRequest = LocationRequest.create();
+//        locationRequest.setInterval(2 * 1000); // 2 seconds
+//        locationRequest.setFastestInterval(1 * 1000); // 1 second
+//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+//        setupLocationCallback();
+        requestLocationUpdates();
+
+
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
 
     @Override
@@ -253,21 +308,54 @@ public class SOSService extends Service {
         }
         return START_STICKY;
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         stopSOS();
+        if (wakeLock.isHeld()) {
+            wakeLock.release();
+        }
     }
 
+
+    public void sendsos() {
+        ToneGenerator tone = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+        tone.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+        if ((latitude == 0.0) || (longitude == 0.0)) {
+            Toast.makeText(getApplicationContext(), "Zero error Please Wait!!!", Toast.LENGTH_SHORT).show();
+            setupLocationCallback();
+        } else {
+            myLocation = "http://maps.google.com/maps?q=loc:" + Double.toString(latitude) + "," + Double.toString(longitude);
+            manager.sendTextMessage(ENUM, null, MSG + "\n" + "Click on the link to view my Location:" + myLocation, null, null);
+//            manager.sendTextMessage(ENUM,null,MSG+"\n"+"Click on the link to view my Location:"+myLocation+" track me this IMEI No: "+IMEI,null,null);
+//            msg.setText("MESSAGE SENT!!");
+            Toast.makeText(getApplicationContext(), "sent", Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(longitude) + "\nLatitude:" + Double.toString(latitude), Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void startCountdown() {
+
+        countDownTimer = new CountDownTimer(COUNTDOWN_TIME, INTERVAL) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+
+            @Override
+            public void onFinish() {
+                sendsos();
+            }
+        };
+        countDownTimer.start();
+    }
     private void startSOS() {
         if (!isRunning) {
             isRunning = true;
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    sendSOSBroadcast();
-//                    sos(); // Call the SOS method
+                    requestLocationUpdates();
+                    startCountdown();
                     handler.postDelayed(this, intervalMillis);
                 }
             };
@@ -278,17 +366,80 @@ public class SOSService extends Service {
         Intent intent = new Intent(IntervalActivity.ACTION_SOS);
         sendBroadcast(intent);
     }
+
     private void stopSOS() {
         if (isRunning) {
             handler.removeCallbacks(runnable);
             handler.removeCallbacksAndMessages(null);
+            if (fusedLocationClient != null && locationCallback != null) {
+                fusedLocationClient.removeLocationUpdates(locationCallback);
+            }
             isRunning = false;
         }
     }
 
+//    private void stopSOS() {
+//        if (isRunning) {
+//            handler.removeCallbacks(runnable);
+//            handler.removeCallbacksAndMessages(null);
+//            isRunning = false;
+//        }
+//    }
+
     private void restartSOS() {
         stopSOS();
         startSOS();
+    }
+
+
+
+
+    private void requestLocationUpdates() {
+     locationRequest = LocationRequest.create();
+//        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(2 * 1000); // 2 seconds
+        locationRequest.setFastestInterval(1 * 1000); // 1 second
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+//        LocationRequest locationRequest = LocationRequest.create();
+//        locationRequest.setInterval(intervalMillis);
+//        locationRequest.setFastestInterval(intervalMillis / 2);
+//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        if (locationCallback == null) {
+            setupLocationCallback();
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+    }
+
+    private void setupLocationCallback() {
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                    locationChangeCounter++;
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+
+                }
+                }
+            }
+        };
     }
 
     private void sos() {
@@ -318,7 +469,7 @@ public class SOSService extends Service {
         return new NotificationCompat.Builder(this, "SOSServiceChannel")
                 .setContentTitle("SOS Service")
                 .setContentText("Sending SOS location updates...")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.girl_vector)
                 .build();
     }
 

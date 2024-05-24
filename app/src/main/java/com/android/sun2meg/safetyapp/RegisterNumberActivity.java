@@ -44,13 +44,13 @@ public class RegisterNumberActivity extends AppCompatActivity {
     private static final int PICK_CONTACT_REQUEST = 2;
     TextInputEditText message;
     TextInputEditText number;
-    EditText num;
+
     TelephonyManager telephonyManager;
     String imei;
     String imeiNo;
 
     private String[] countryArray;
-    private Spinner countrySpinner;
+
     private EditText phoneEditText;
 
     @Override
@@ -61,14 +61,10 @@ public class RegisterNumberActivity extends AppCompatActivity {
 
         message = findViewById(R.id.messageEdit);
         number = findViewById(R.id.numberEdit);
-        num = findViewById(R.id.numb);
+
         imeiNo = "56734";
         // Set up the country spinner
-        countrySpinner = findViewById(R.id.country_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.country_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        countrySpinner.setAdapter(adapter);
+
 
     }
 
@@ -196,12 +192,7 @@ public class RegisterNumberActivity extends AppCompatActivity {
         startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
     }
 
-    private String getCountryCode() {
-        String selectedItem = (String) countrySpinner.getSelectedItem();
-        int startIndex = selectedItem.lastIndexOf('(') + 1;
-        int endIndex = selectedItem.lastIndexOf(')');
-        return selectedItem.substring(startIndex, endIndex);
-    }
+
     private boolean isValidPhoneNumber(String phoneNumber) {
         // Updated regex to allow optional spaces between digits
         String regex = "^[+]?[0-9 ]{10,15}$";
@@ -239,9 +230,8 @@ public class RegisterNumberActivity extends AppCompatActivity {
 
 
         String phoneNumber = number.getText().toString();
-//        String phoneNumber = phoneEditText.getText().toString();
-        String countryCode = getCountryCode();
-        String fullPhoneNumber = countryCode + phoneNumber;
+
+        String fullPhoneNumber =  phoneNumber;
 
         if (isValidPhoneNumber(fullPhoneNumber)) {
             // Phone number is valid, display toast message with full phone number
@@ -298,7 +288,7 @@ private void contactPicked(Uri contactUri) {
     if (cursor != null && cursor.moveToFirst()) {
         int phoneNumberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
         String phoneNumber = cursor.getString(phoneNumberIndex);
-        num.setText (phoneNumber);
+
         Toast.makeText(this, "Selected phone number: " + phoneNumber, Toast.LENGTH_SHORT).show();
         cursor.close();
     } else {

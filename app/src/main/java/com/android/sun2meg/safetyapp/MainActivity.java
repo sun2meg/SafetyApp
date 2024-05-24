@@ -119,7 +119,10 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         String ENUM = sharedPreferences.getString("ENUM", "NONE");
         if (ENUM.equalsIgnoreCase("NONE")) {
-            startActivity(new Intent(this, RegisterNumberActivity.class));
+            Intent intent = new Intent(getApplicationContext(), RegisterNumberActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+//            startActivity(new Intent(this, RegisterNumberActivity.class));
         } else {
             TextView textView = findViewById(R.id.textNum);
             textView.setText("SOS Will Be Sent To\n" + ENUM);

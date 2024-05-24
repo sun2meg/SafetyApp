@@ -3,125 +3,147 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@drawable/mast2"
+    android:background="@drawable/reg"
     android:layout_height="match_parent"
     tools:context=".RegisterNumberActivity">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_centerInParent="true">
 
-        <TextView
-            android:id="@+id/text1"
+        <LinearLayout
+            android:id="@+id/lin1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/backbutton2"
+            android:orientation="vertical">
 
-            android:text="Enter Number To\nSend SMS\nin\nEMERGENCY!"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="19sp" />
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Compose SMS"
+                android:textAlignment="center"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="5sp"
+                android:textColor="#591904"
+                android:textSize="19sp"
+                android:textStyle="bold" />
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/message"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text1"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="13dp">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/message"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="13dp"
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/messageEdit"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_marginTop="13dp"
+                android:layout_marginEnd="13dp"
+                android:layout_marginBottom="13dp">
 
-                android:hint="Message"
-                android:inputType="textShortMessage"
-                android:text="my security seems in doubt."
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/messageEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
 
-                android:textAlignment="center" />
-        </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="Message"
+                    android:inputType="textShortMessage"
+                    android:text="my security seems in doubt."
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+
+                    android:textStyle="bold" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
 
         <LinearLayout
-            android:id="@+id/number2"
+            android:id="@+id/lin2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/message"
-
+            android:layout_below="@id/lin1"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="13dp"
             android:layout_marginTop="13dp"
             android:layout_marginEnd="13dp"
             android:layout_marginBottom="13dp"
-            android:orientation="horizontal">
+            android:background="@drawable/backbutton2"
+            android:orientation="vertical">
 
-            <Spinner
-                android:id="@+id/country_spinner"
-                android:layout_width="100dp"
+            <TextView
+                android:id="@+id/num_txt"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:layout_marginLeft="65dp"
-                android:entries="@array/country_array" />
+                android:layout_below="@id/lin1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="5sp"
+                android:text="Register Phone Number"
+                android:textAlignment="center"
+                android:textColor="#591904"
+                android:textSize="19sp"
+                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/number"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="150dp"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/numberEdit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
+                    android:layout_centerHorizontal="true"
                     android:hint="Number"
                     android:inputType="number|text|textPhonetic|textPostalAddress"
                     android:maxLength="13"
-                    android:textAlignment="center" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
 
-        <Button
-            android:id="@+id/pickContactButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/number2"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/pickContactButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:onClick="pickContact"
-            android:text="Pick from Contacts" />
+                android:layout_marginTop="10dp"
+                android:onClick="pickContact"
+                android:text="Pick from Contacts" />
+
+        </LinearLayout>
 
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/save"
             android:layout_width="200dp"
             android:layout_height="60dp"
-            android:id="@+id/save"
-            android:layout_below="@id/pickContactButton"
+            android:layout_below="@id/lin2"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:backgroundTint="#ffffff"
+            android:background="@drawable/backbutton2"
 
             android:onClick="saveNumber"
             android:text="save"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             app:cornerRadius="10dp" />
 
-        <EditText
-            android:id="@+id/numb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/save"
-
-            android:ems="10"
-            android:inputType="number"
-            android:text="Name" />
 
     </RelativeLayout>
 

@@ -5,9 +5,11 @@ import static android.graphics.Color.BLUE;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.AudioManager;
@@ -40,13 +42,14 @@ import java.util.Locale;
 public class RecordingService extends AppCompatActivity implements LocationListener {
 
     private FusedLocationProviderClient mFusedLocationClient;
+    private ProgressDialog progressDialog;
 
     SmsManager manager = SmsManager.getDefault();
     private double wayLatitude = 0.0, wayLongitude = 0.0;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private android.widget.Button btnLocation;
-    private TextView txtLocation;
+//    private TextView txtLocation;
     private android.widget.Button btnContinueLocation;
     private TextView txtContinueLocation;
     private StringBuilder stringBuilder;
@@ -101,7 +104,7 @@ public class RecordingService extends AppCompatActivity implements LocationListe
                         wayLatitude = location.getLatitude();
                         wayLongitude = location.getLongitude();
                         if (!isContinue) {
-                            txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
+//                            txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
                         } else {
 //                            stringBuilder.append(wayLatitude);
 //                            stringBuilder.append("-");
@@ -110,6 +113,8 @@ public class RecordingService extends AppCompatActivity implements LocationListe
 //                            txtContinueLocation.setText(stringBuilder.toString());
                             if (wayLatitude != oldLatitude || wayLongitude != oldLongitude) {
                                 locationChangeCounter++;
+                                updateProgressDialog(locationChangeCounter * 20); // Example progress increment
+
                                 if (locationChangeCounter >= 5) {
                                     startCountdown();
 //                                    locationChangeCounter = 0; // Reset the counter
@@ -124,7 +129,7 @@ public class RecordingService extends AppCompatActivity implements LocationListe
             }
         };
 
-
+        showProgressDialog();
         // Start tracking location
 //        startLocationTracking();
         getLocation();
@@ -153,6 +158,20 @@ public class RecordingService extends AppCompatActivity implements LocationListe
         });
 
     }
+    private void showProgressDialog() {
+        progressDialogFragment = ProgressDialogFragment.newInstance(100); // Set max progress to 100
+        progressDialogFragment.show(getSupportFragmentManager(), "progress_dialog");
+    }
+
+    private void updateProgressDialog(int progress) {
+        if (progressDialogFragment != null) {
+            progressDialogFragment.updateProgress(progress);
+            if (progress >= 100) {
+                progressDialogFragment.dismissProgress();
+            }
+        }
+    }
+
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(RecordingService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(RecordingService.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -167,7 +186,6 @@ public class RecordingService extends AppCompatActivity implements LocationListe
                     if (location != null) {
                         wayLatitude = location.getLatitude();
                         wayLongitude = location.getLongitude();
-                        txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
                     } else {
                         mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
                     }
@@ -193,7 +211,6 @@ public class RecordingService extends AppCompatActivity implements LocationListe
                             if (location != null) {
                                 wayLatitude = location.getLatitude();
                                 wayLongitude = location.getLongitude();
-                                txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
                             } else {
                                 mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
                             }
@@ -206,8 +223,86 @@ public class RecordingService extends AppCompatActivity implements LocationListe
             }
         }
     }
+    private ProgressDialogFragment progressDialogFragment;
+
+    private void startCountdownx() {
+        progressDialogFragment = ProgressDialogFragment.newInstance((int) COUNTDOWN_TIME);
+        progressDialogFragment.show(getSupportFragmentManager(), "progress_dialog");
+
+        countDownTimer = new CountDownTimer(COUNTDOWN_TIME, INTERVAL) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long progress = COUNTDOWN_TIME - millisUntilFinished;
+                if (progressDialogFragment != null) {
+                    progressDialogFragment.updateProgress((int) progress);
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (progressDialogFragment != null) {
+                    progressDialogFragment.dismiss();
+                }
+                // Handle finish logic
+                if ((wayLatitude == 0.0) && (wayLongitude == 0.0)) {
+                    Toast.makeText(RecordingService.this, "Try Again!!!", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    titleText.setText("Location Found!!!");
+                    titleText.setTextColor(BLUE);
+                    progressBar.setVisibility(View.GONE);
+                    button.setVisibility(View.VISIBLE);
+                    if (!sent){
+                        sendSOS();
+                    }
+                    Toast.makeText(RecordingService.this, "Location sent!!!", Toast.LENGTH_SHORT).show();
+//                    msg.setVisibility(View.VISIBLE);
+//                    msg.append("Push Button to send Your Location");
+                }
+            }
+        };
+        countDownTimer.start();
+    }
 
     private void startCountdown() {
+        // Initialize the ProgressDialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Sending location...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMax((int) COUNTDOWN_TIME);
+        progressDialog.setProgress(0);
+        progressDialog.setCancelable(false); // Prevent dismissal by back button
+        progressDialog.show();
+
+        countDownTimer = new CountDownTimer(COUNTDOWN_TIME, INTERVAL) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // Calculate the progress based on the remaining time
+                long progress = COUNTDOWN_TIME - millisUntilFinished;
+                progressDialog.setProgress((int) progress); // Update the progress dialog
+            }
+
+            @Override
+            public void onFinish() {
+                progressDialog.dismiss(); // Dismiss the progress dialog
+                if ((wayLatitude == 0.0) && (wayLongitude == 0.0)) {
+                    Toast.makeText(RecordingService.this, "Try Again!!!", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    titleText.setText("Location SENT!!!");
+                    titleText.setTextColor(Color.BLUE); // Change to Color.BLUE
+                    button.setVisibility(View.VISIBLE);
+                    if (!sent){
+                        sendSOS();
+                    }
+                    Toast.makeText(RecordingService.this, "Location sent!!!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        countDownTimer.start();
+    }
+
+    private void startCountdown0() {
         progressBar.setMax((int) COUNTDOWN_TIME); // Set the maximum progress of the ProgressBar
 
         countDownTimer = new CountDownTimer(COUNTDOWN_TIME, INTERVAL) {
